@@ -3,6 +3,7 @@ import Firebase from "./firebase";
 import { Manga } from "./manga";
 import Scrabber from "./scrabber";
 import Server from "./server";
+import { schedule } from "@netlify/functions"
 
 const server = new Server(4000)
 const webSites: Array<String> = [
@@ -28,6 +29,9 @@ const promises: Array<Promise<Manga>> = []
 const firebase = new Firebase()
 const webhook = new WebHook()
 
+export const handler = schedule("* * * * *", (event: any) => {
+    console.log("Scheduled function executed")
+})
 webSites.forEach(async url => {
     const scrabber = new Scrabber(url)
     promises.push(scrabber.manga)

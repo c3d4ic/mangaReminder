@@ -4,3 +4,5 @@ test
 jest.config.js
 
 .env
+
+functions
