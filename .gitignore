@@ -4,4 +4,3 @@ test
 jest.config.js
 
 .env
-firebase.json
