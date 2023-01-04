@@ -46,7 +46,7 @@ export default class Firebase {
                 console.log("Failed with error: " + error)
             } else {
                 // The write was successful...
-                console.log("success")
+                console.log("Data is up to date")
             }
         })
     }

@@ -11,7 +11,9 @@ export default class Server {
     }
 
     start() {
+
         const app = express()
+
         app.get('/', function (req: Request, res: Response) {
             res.send('Hello world')
         })

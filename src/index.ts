@@ -29,9 +29,6 @@ const promises: Array<Promise<Manga>> = []
 const firebase = new Firebase()
 const webhook = new WebHook()
 
-export const handler = schedule("* * * * *", (event: any) => {
-    console.log("Scheduled function executed")
-})
 webSites.forEach(async url => {
     const scrabber = new Scrabber(url)
     promises.push(scrabber.manga)

@@ -5,4 +5,5 @@ jest.config.js
 
 .env
 
-functions
+# Local Netlify folder
+.netlify
