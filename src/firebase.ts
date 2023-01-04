@@ -4,7 +4,7 @@ const firebase = require("firebase-admin");
 const serviceAccount = require(".././mangareminder-d3ade-firebase-adminsdk-3fnz5-e3642b393c.json");
 
 export default class Firebase {
-
+    fes
     protected database: any
 
     constructor() {
