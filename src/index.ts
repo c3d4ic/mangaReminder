@@ -1,19 +1,32 @@
-import { Console } from "console";
+import WebHook from "./webhook";
 import Firebase from "./firebase";
 import { Manga } from "./manga";
 import Scrabber from "./scrabber";
 import Server from "./server";
 
 const server = new Server(4000)
-
-
 const webSites: Array<String> = [
+    'https://mangarockteam.com/manga/after-being-reborn-i-became-the-strongest-to-save-everyone/',
+    'https://mangarockteam.com/manga/global-martial-arts/',
+    'https://mangarockteam.com/manga/onepunch-man/',
+    'https://mangarockteam.com/manga/mushoku-tensei-isekai-ittara-honki-dasu/',
+    'https://mangarockteam.com/manga/tate-no-yuusha-no-nariagari/',
+    'https://mangarockteam.com/manga/hajime-no-ippo/',
+    'https://mangarockteam.com/manga/tensei-shitara-slime-datta-ken_2/',
+    'https://mangarockteam.com/manga/solo-max-level-newbie/',
+    'https://mangarockteam.com/manga/the-world-after-the-fall/',
+    'https://mangarockteam.com/manga/the-tutorial-is-too-hard/',
+    'https://mangarockteam.com/manga/the-player-that-cant-level-up/',
+    'https://mangarockteam.com/manga/the-breaker-eternal-force/',
+    'https://mangarockteam.com/manga/return-of-the-sss-class-ranker/',
     'https://mangarockteam.com/manga/return-of-the-frozen-player/',
-    'https://mangarockteam.com/manga/global-martial-arts/'
+    'https://mangarockteam.com/manga/my-status-as-an-assassin-obviously-exceeds-the-braves/',
+    'https://mangarockteam.com/manga/blue-lock/',
 ]
 
 const promises: Array<Promise<Manga>> = []
 const firebase = new Firebase()
+const webhook = new WebHook()
 
 webSites.forEach(async url => {
     const scrabber = new Scrabber(url)
@@ -30,29 +43,17 @@ Promise.all(promises).then((mangas) => {
                     if (!chapterFind) {
                         // Nouveau chapitre disponible
                         data[mangaID].release.push(remoteChapter);
-                        console.log("NEW CHAPTER : ", scrabberManga.title)
-                        // newChapterEvent.emit('new', 'chapter', scrabberManga.title);
+                        webhook.send('Nouveau chapitre disponible ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
                     }
                 });
             } else {
+                // Nouveau manga ajouté dans la liste
                 data.push(scrabberManga);
-                console.log("NEW MANGA")
-                // newChapterEvent.emit('new', 'manga', scrabberManga.title);
-
+                webhook.send('Nouveau manga ajouté ! ', scrabberManga.title, '')
             }
         })
         firebase.postData(data)
     })
-
-    // SI NOUVEAUTE --> NOTIFIER WEBHOOK DISCORD
-
 })
-
-
-
-// scrabber.init().then(() => {
-//     console.log("Mangas : ", scrabber.mangas);
-
-// })
 
 server.start()

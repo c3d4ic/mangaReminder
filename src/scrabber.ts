@@ -42,7 +42,6 @@ export default class Scrabber {
         catch (error) {
             console.error(error);
         }
-
     }
 
 
@@ -51,15 +50,10 @@ export default class Scrabber {
 
         var releases: Array<Release> = []
         chapters.each((i: number, chapter: any) => {
-
             var span = $(chapter).find("span");
-
             var a = $(span).find("a");
             var chapterTitle = $(chapter).text();
-            // console.log("chapterTitle : ", typeof $(a).attr())
-
             if (typeof $(a).attr() !== 'undefined') {
-                console.log("ici");
                 var url = $(a).attr('href');
                 releases.push({
                     chapter: chapterTitle.trim(),
@@ -68,7 +62,6 @@ export default class Scrabber {
                 });
             }
         })
-        // console.log("RELEASES : ", releases);
         return releases;
     }
 }
