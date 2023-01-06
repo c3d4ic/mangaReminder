@@ -24,20 +24,23 @@ export default class Deploy {
         'https://mangarockteam.com/manga/my-status-as-an-assassin-obviously-exceeds-the-braves/',
         'https://mangarockteam.com/manga/blue-lock/',
     ]
+    public firebase: any
+    public webhook: any
+    public promises: Array<Promise<Manga>> = []
 
     constructor() {
+        this.firebase = new Firebase()
+        this.webhook = new WebHook()
+    }
 
-        const promises: Array<Promise<Manga>> = []
-        const firebase = new Firebase()
-        const webhook = new WebHook()
-
+    run() {
         this.webSites.forEach(async url => {
             const scrabber = new Scrabber(url)
-            promises.push(scrabber.manga)
+            this.promises.push(scrabber.manga)
         });
 
-        Promise.all(promises).then((mangas) => {
-            firebase.getData().then((data: Array<Manga>) => {
+        Promise.all(this.promises).then((mangas) => {
+            this.firebase.getData().then((data: Array<Manga>) => {
                 mangas.forEach((scrabberManga: Manga) => {
                     let mangaID = data.findIndex(remoteManga => remoteManga.title === scrabberManga.title);
                     if (mangaID > -1) {
@@ -46,18 +49,17 @@ export default class Deploy {
                             if (!chapterFind) {
                                 // Nouveau chapitre disponible
                                 data[mangaID].release.push(remoteChapter);
-                                webhook.send('Nouveau chapitre disponible ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
+                                this.webhook.send('Nouveau chapitre disponible ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
                             }
                         });
                     } else {
                         // Nouveau manga ajouté dans la liste
                         data.push(scrabberManga);
-                        webhook.send('Nouveau manga ajouté ! ', scrabberManga.title, '')
+                        this.webhook.send('Nouveau manga ajouté ! ', scrabberManga.title, '')
                     }
                 })
-                firebase.postData(data)
+                this.firebase.postData(data)
             })
         })
-
     }
 }
