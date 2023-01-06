@@ -7,7 +7,7 @@ const deploy = new Deploy()
 export const handler = schedule("* * * * *", async (event: any) => {
 
     console.log("Scheduled function executed")
-    deploy.run();
+    // deploy.run();
     return {
         statusCode: 200,
     }
