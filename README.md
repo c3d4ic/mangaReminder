@@ -8,7 +8,7 @@ nodeJs application how manage to notify when a new manga chapter is release in a
 
 
 ```bash
-  npx tsc
   npm install
+  npx tsc
   npm run dev
 ```

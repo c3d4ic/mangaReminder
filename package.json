@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently -k -n \"Typescript,Node\" -p \"[{name}]\" -c \"blue,green\" \"tsc --watch\" \"nodemon dist/index.js\"",
-    "start": "./node_modules/.bin/netlify-lambda serve src",
-    "build": "./node_modules/.bin/netlify-lambda build src"
+    "build": "npm install && npx tsc"
   },
   "keywords": [],
   "author": "",
@@ -34,6 +33,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "firebase-admin": "^11.4.1",
-    "netlify-lambda": "^2.0.15"
+    "netlify-lambda": "^2.0.15",
+    "npx": "^10.2.2"
   }
 }
