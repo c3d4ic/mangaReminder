@@ -1,6 +1,5 @@
 import { Manga } from "./manga";
 import { Release } from "./release";
-import https from 'https'
 
 const cheerio = require('cheerio');
 const axios = require('axios');
@@ -20,15 +19,6 @@ export default class Scrabber {
     async fetch(url: String): Promise<any> {
 
         try {
-            if (process.env.NODE_ENV === 'development') {
-                const httpsAgent = new https.Agent({
-                    rejectUnauthorized: false,
-                })
-                axios.defaults.httpsAgent = httpsAgent
-                // eslint-disable-next-line no-console
-                console.log(process.env.NODE_ENV, `RejectUnauthorized is disabled.`)
-            }
-
             const response = await axios.get(url);
             const $ = cheerio.load(response.data);
 
