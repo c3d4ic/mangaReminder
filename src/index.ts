@@ -4,8 +4,9 @@ import { Manga } from "./manga";
 import Scrabber from "./scrabber";
 import Server from "./server";
 import { schedule } from "@netlify/functions"
+require('dotenv').config();
 
-// const server = new Server(4000)
+const server = new Server(6001)
 const webSites: Array<String> = [
     'https://mangarockteam.com/manga/after-being-reborn-i-became-the-strongest-to-save-everyone/',
     'https://mangarockteam.com/manga/global-martial-arts/',
@@ -57,4 +58,4 @@ Promise.all(promises).then((mangas) => {
     })
 })
 
-// server.start()
+server.start()
