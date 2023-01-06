@@ -14,7 +14,7 @@ import { Handler, HandlerEvent, HandlerContext, schedule } from "@netlify/functi
 import Deploy from "./../../src/deploy"
 
 const myHandler: Handler = async (event: HandlerEvent, context: HandlerContext) => {
-    // console.log("Received event:", event);
+    console.log("Received event:", event);
 
     const deploy = new Deploy()
 
@@ -23,6 +23,6 @@ const myHandler: Handler = async (event: HandlerEvent, context: HandlerContext) 
     };
 };
 
-const handler = schedule("0-15-30-45 * * * *", myHandler)
+const handler = schedule("*/15 * * * *", myHandler)
 
 export { handler };
