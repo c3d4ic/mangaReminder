@@ -22,11 +22,14 @@ const webSites: Array<String> = [
     'https://mangarockteam.com/manga/return-of-the-frozen-player/',
     'https://mangarockteam.com/manga/my-status-as-an-assassin-obviously-exceeds-the-braves/',
     'https://mangarockteam.com/manga/blue-lock/',
+    'https://mangarockteam.com/manga/solo_leveling_6/',
+    "https://mangarockteam.com/manga/kill-the-hero_2/",
 ]
 
 const promises: Array<Promise<Manga>> = []
 const firebase = new Firebase()
 const webhook = new WebHook()
+
 
 webSites.forEach(async url => {
     const scrabber = new Scrabber(url)
@@ -34,17 +37,29 @@ webSites.forEach(async url => {
 });
 
 Promise.all(promises).then((mangas) => {
+
     firebase.getData().then((data: Array<Manga>) => {
         mangas.forEach((scrabberManga: Manga) => {
             let mangaID = data.findIndex(remoteManga => remoteManga.title === scrabberManga.title);
             if (mangaID > -1) {
                 scrabberManga.release.forEach(remoteChapter => {
-                    let chapterFind = data[mangaID].release.find(localChapter => localChapter.chapter === remoteChapter.chapter);
-                    if (!chapterFind) {
-                        // Nouveau chapitre disponible
+                    console.log("data[mangaID] : ", data[mangaID])
+
+                    if(data[mangaID].release) {
+                        let chapterFind = data[mangaID].release.find(localChapter => localChapter.chapter === remoteChapter.chapter);
+                        if (!chapterFind) {
+                            // Nouveau chapitre disponible
+                            data[mangaID].release.push(remoteChapter);
+                            webhook.send('Nouveau chapitre disponible ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
+                        }
+                    } else {
+                        data[mangaID].release = [];
                         data[mangaID].release.push(remoteChapter);
                         webhook.send('Nouveau chapitre disponible ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
                     }
+
+                    
+
                 });
             } else {
                 // Nouveau manga ajouté dans la liste
@@ -54,6 +69,6 @@ Promise.all(promises).then((mangas) => {
         })
         firebase.postData(data)
     })
-})
+}) 
 
 server.start()
