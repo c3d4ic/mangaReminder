@@ -13,13 +13,22 @@ export default class WebHook {
 
     send(action: String, title: String, link: String) {
 
-        this.embed = new EmbedBuilder()
+        if(link.length > 0) {
+            this.embed = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle(action)
             .setDescription(title)
             .setURL(link)
             .setTimestamp()
             .setFooter({ text: 'Have fun !', iconURL: 'https://i.imgur.com/o77nF0S.jpg' });
+        } else {
+            this.embed = new EmbedBuilder()
+            .setColor(0x0099FF)
+            .setTitle(action)
+            .setDescription(title)
+            .setTimestamp()
+            .setFooter({ text: 'Have fun !', iconURL: 'https://i.imgur.com/o77nF0S.jpg' });
+        }
 
 
         this.webhookClient.send({
