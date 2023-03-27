@@ -57,7 +57,8 @@ export default class Scrabber {
                 releases.push({
                     chapter: chapterTitle.trim(),
                     url: url,
-                    read: false
+                    read: false,
+                    date: new Date()
                 });
             }
         })

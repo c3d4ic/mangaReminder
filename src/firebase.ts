@@ -40,7 +40,7 @@ export default class Firebase {
     }
 
     postData(mangas: Array<Manga>) {
-
+        // console.log("POSRT DATA : ", mangas)
         set(this.ref, mangas).then((result => {
             console.log("Data is up to date")
         })).catch((error) => {

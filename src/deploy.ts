@@ -25,7 +25,8 @@ export default class Deploy {
         'https://mangarockteam.com/manga/my-status-as-an-assassin-obviously-exceeds-the-braves/',
         'https://mangarockteam.com/manga/blue-lock/',
         'https://mangarockteam.com/manga/solo_leveling_6/',
-        'https://mangarockteam.com/manga/kill-the-hero_2/'
+        'https://mangarockteam.com/manga/kill-the-hero_2/',
+        'https://mangarockteam.com/manga/one-piece/'
     ]
     public firebase: any
     public webhook: any
@@ -48,21 +49,31 @@ export default class Deploy {
                     let mangaID = data.findIndex(remoteManga => remoteManga.title === scrabberManga.title);
                     if (mangaID > -1) {
                         scrabberManga.release.forEach(remoteChapter => {
-                            let chapterFind = data[mangaID].release.find(localChapter => localChapter.chapter === remoteChapter.chapter);
-                            if (!chapterFind) {
-                                // Nouveau chapitre disponible
-                                data[mangaID].release.push(remoteChapter);
-                                console.log("Nouveau chapitre ! - ", scrabberManga.title);
+                            console.log("RELEASe : ", remoteChapter);
+                            if(data[mangaID].release) {
+                                let chapterFind = data[mangaID].release.find(localChapter => localChapter.chapter === remoteChapter.chapter);
+                                if (!chapterFind) {
+                                    // Nouveau chapitre disponible
+                                    data[mangaID].release.push(remoteChapter)
+                                    console.log("Nouveau chapitre ! - ", scrabberManga.title)
+                                    this.webhook.send('Nouveau chapitre disponible ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
+                                }
+                            } else {
+                                data[mangaID].release = []
+                                data[mangaID].release.push(remoteChapter)
+                                console.log("Nouveau chapitre ! - ", scrabberManga.title)
                                 this.webhook.send('Nouveau chapitre disponible ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
                             }
+                            
                         });
                     } else {
                         // Nouveau manga ajouté dans la liste
-                        data.push(scrabberManga);
-                        console.log("Nouveau Manga !");
+                        data.push(scrabberManga)
+                        console.log("Nouveau Manga ! : ", scrabberManga);
                         this.webhook.send('Nouveau manga ajouté ! ', scrabberManga.title, '')
                     }
                 })
+                // console.log("data : ", data)
                 this.firebase.postData(data)
             })
         })
