@@ -26,7 +26,9 @@ export default class Deploy {
         'https://mangarockteam.com/manga/blue-lock/',
         'https://mangarockteam.com/manga/solo_leveling_6/',
         'https://mangarockteam.com/manga/kill-the-hero_2/',
-        'https://mangarockteam.com/manga/one-piece/'
+        'https://mangarockteam.com/manga/one-piece/',
+        'https://mangarockteam.com/manga/return-of-the-disaster-class-hero/',
+        'https://mangarockteam.com/manga/skeleton-soldier-couldnt-protect-the-dungeon/'
     ]
     public firebase: any
     public webhook: any
@@ -49,7 +51,6 @@ export default class Deploy {
                     let mangaID = data.findIndex(remoteManga => remoteManga.title === scrabberManga.title);
                     if (mangaID > -1) {
                         scrabberManga.release.forEach(remoteChapter => {
-                            console.log("RELEASe : ", remoteChapter);
                             if(data[mangaID].release) {
                                 let chapterFind = data[mangaID].release.find(localChapter => localChapter.chapter === remoteChapter.chapter);
                                 if (!chapterFind) {
@@ -62,7 +63,7 @@ export default class Deploy {
                                 data[mangaID].release = []
                                 data[mangaID].release.push(remoteChapter)
                                 console.log("Nouveau chapitre ! - ", scrabberManga.title)
-                                this.webhook.send('Nouveau chapitre disponible ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
+                                this.webhook.send('Nouveau chapitre disponible d\'un nouveau manga ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
                             }
                             
                         });
