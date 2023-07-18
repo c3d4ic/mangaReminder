@@ -41,25 +41,33 @@ export default class Deploy {
 
     run() {
         this.webSites.forEach(async url => {
-            const scrabber = new Scrabber(url)
-            this.promises.push(scrabber.manga)
+            const scrabber = new Scrabber()
+
+            const remoteMangas = scrabber.init(url)
+
+            this.promises.push(remoteMangas)
         });
 
         Promise.all(this.promises).then((mangas) => {
+            console.log("LOOP : ", mangas);
             this.firebase.getData().then((data: Array<Manga>) => {
                 mangas.forEach((scrabberManga: Manga) => {
+                    console.log("scrabberManga : ", scrabberManga)
                     let mangaID = data.findIndex(remoteManga => remoteManga.title === scrabberManga.title);
                     if (mangaID > -1) {
                         scrabberManga.release.forEach(remoteChapter => {
+                            console.log('data[mangaID].release : ', data[mangaID].release);
                             if(data[mangaID].release) {
                                 let chapterFind = data[mangaID].release.find(localChapter => localChapter.chapter === remoteChapter.chapter);
                                 if (!chapterFind) {
                                     // Nouveau chapitre disponible
                                     data[mangaID].release.push(remoteChapter)
+                                    console.log("remoteChaptr : ", remoteChapter);
                                     console.log("Nouveau chapitre ! - ", scrabberManga.title)
                                     this.webhook.send('Nouveau chapitre disponible ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
                                 }
                             } else {
+                                console.log("PAS DE RELEASE DONC NOUVEAU CHAPITRE");
                                 data[mangaID].release = []
                                 data[mangaID].release.push(remoteChapter)
                                 console.log("Nouveau chapitre ! - ", scrabberManga.title)

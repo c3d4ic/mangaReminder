@@ -6,17 +6,16 @@ const axios = require('axios');
 
 export default class Scrabber {
 
-    readonly url: String
-    public manga: Promise<Manga>
-
-    constructor(
-        url: String
-    ) {
-        this.url = url
-        this.manga = this.fetch(url)
+    constructor() {
     }
 
-    async fetch(url: String): Promise<any> {
+    async init(url: String): Promise<Manga> {
+        const manga: Promise<Manga> = await this.fetchManga(url);
+        console.log("manga : ", manga);
+        return manga
+    }
+
+    async fetchManga(url: String): Promise<any> {
 
         try {
             const response = await axios.get(url);
@@ -28,8 +27,13 @@ export default class Scrabber {
             var imgURL = $(image).find("img").attr('data-src');
 
             var releases: Array<Release> = []
-            releases = this.getReleases($, chapters)
+            releases = await this.getReleases($, chapters);
+            let pages
+            for (let i = 0; i <= releases.length - 1; i++) {
+                pages = await this.fetchScanPages(releases[i].url)
+                releases[i].pages = pages
 
+            }
             let manga: Manga = {
                 title: title,
                 image: imgURL,
@@ -37,31 +41,56 @@ export default class Scrabber {
             }
 
             return manga
+
         }
         catch (error) {
             console.error(error);
+            return error
+        }
+    }
+
+    async fetchScanPages(url: String): Promise<String[]> {
+        try {
+            const response = await axios.get(url);
+            const $ = await cheerio.load(response.data);
+            var pages: String[] = [];
+
+            await $(".reading-content .page-break").each(async (index: number, element: any) => {
+                var imgURL = await $(element).find("img").attr('data-src');
+                imgURL = imgURL.replace(/(\r\n|\n|\r)/gm, "");
+                pages.push(imgURL.trim());
+
+            });
+ 
+            return pages;
+        }
+        catch (error) {
+            console.error(error);
+            return []
         }
     }
 
 
 
-    getReleases($: any, chapters: any): Array<Release> {
+    async getReleases($: any, chapters: any): Promise<Array<Release>> {
 
         var releases: Array<Release> = []
-        chapters.each((i: number, chapter: any) => {
+        await chapters.each(async (i: number, chapter: any) => {
             var span = $(chapter).find("span");
             var a = $(span).find("a");
             var chapterTitle = $(chapter).text();
             if (typeof $(a).attr() !== 'undefined') {
                 var url = $(a).attr('href');
+
                 releases.push({
                     chapter: chapterTitle.trim(),
                     url: url,
                     read: false,
-                    date: new Date()
+                    date: new Date(),
+                    pages: []
                 });
             }
         })
-        return releases;
+        return releases
     }
 }

@@ -3,6 +3,7 @@ require('dotenv').config();
 
 import { initializeApp } from "firebase/app";
 import { getDatabase, ref, child, get, set } from "firebase/database";
+import { serialize } from "v8";
 export default class Firebase {
 
     protected database: any
@@ -40,7 +41,6 @@ export default class Firebase {
     }
 
     postData(mangas: Array<Manga>) {
-        // console.log("POSRT DATA : ", mangas)
         set(this.ref, mangas).then((result => {
             console.log("Data is up to date")
         })).catch((error) => {
