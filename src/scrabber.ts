@@ -11,7 +11,6 @@ export default class Scrabber {
 
     async init(url: String): Promise<Manga> {
         const manga: Promise<Manga> = await this.fetchManga(url);
-        console.log("manga : ", manga);
         return manga
     }
 
