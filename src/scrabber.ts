@@ -1,22 +1,25 @@
 import { Manga } from "./manga";
+import { OptionScrabber } from "./model";
 import { Release } from "./release";
 
 const cheerio = require('cheerio');
 const axios = require('axios');
 
+
 export default class Scrabber {
 
+    
     constructor() {
     }
 
-    async init(url: String): Promise<Manga> {
-        const manga: Promise<Manga> = await this.fetchManga(url);
-        return manga
-    }
+    // async init(url: String): Promise<Manga> {
+    //     const manga: Promise<Manga> = await this.fetchManga(url);
+    //     return manga
+    // }
 
-    async fetchManga(url: String): Promise<any> {
+    async fetchManga(url: String, option: OptionScrabber): Promise<Manga> {
 
-        try {
+        // try {
             const response = await axios.get(url);
             const $ = cheerio.load(response.data);
 
@@ -26,9 +29,10 @@ export default class Scrabber {
             var imgURL = $(image).find("img").attr('data-src');
 
             var releases: Array<Release> = []
-            releases = await this.getReleases($, chapters);
+            releases = await this.getReleases($, chapters, option);
             let pages
             for (let i = 0; i <= releases.length - 1; i++) {
+                console.log("Fetch release : ", releases[i].chapter);
                 pages = await this.fetchScanPages(releases[i].url)
                 releases[i].pages = pages
 
@@ -36,16 +40,16 @@ export default class Scrabber {
             let manga: Manga = {
                 title: title,
                 image: imgURL,
-                release: releases
+                release: releases,
+                url: url
             }
-
             return manga
 
-        }
-        catch (error) {
-            console.error(error);
-            return error
-        }
+        // }
+        // catch (error) {
+        //     // console.error(error);
+        //     // return error
+        // }
     }
 
     async fetchScanPages(url: String): Promise<String[]> {
@@ -71,15 +75,18 @@ export default class Scrabber {
 
 
 
-    async getReleases($: any, chapters: any): Promise<Array<Release>> {
+    async getReleases($: any, chapters: any, option: OptionScrabber): Promise<Array<Release>> {
 
         var releases: Array<Release> = []
         await chapters.each(async (i: number, chapter: any) => {
-            var span = $(chapter).find("span");
+
+            var link = $(chapter).find("a")
+            var url = $(link).attr('href')
+            var span = $(chapter).find("span")
             var a = $(span).find("a");
-            var chapterTitle = $(chapter).text();
+            var chapterTitle = $(link).text()
             if (typeof $(a).attr() !== 'undefined') {
-                var url = $(a).attr('href');
+                // var url = $(a).attr('href');
 
                 releases.push({
                     chapter: chapterTitle.trim(),
@@ -88,8 +95,16 @@ export default class Scrabber {
                     date: new Date(),
                     pages: []
                 });
+            } else if(option === OptionScrabber.all){
+                releases.push({
+                    chapter: chapterTitle.trim(),
+                    url: url,
+                    read: (typeof $(a).attr() !== 'undefined') ? false : true,
+                    date: new Date(),
+                    pages: []
+                });
             }
         })
-        return releases
+        return releases.reverse();
     }
 }

@@ -2,12 +2,13 @@ import WebHook from "./webhook";
 import Firebase from "./firebase";
 import { Manga } from "./manga";
 import Scrabber from "./scrabber";
+import { OptionScrabber } from "./model";
+import { lastValueFrom } from "rxjs";
 require('dotenv').config();
 
 export default class Deploy {
 
     readonly webSites: Array<String> = [
-        'https://mangarockteam.com/manga/solo-max-level-newbie/',
         'https://mangarockteam.com/manga/after-being-reborn-i-became-the-strongest-to-save-everyone/',
         'https://mangarockteam.com/manga/global-martial-arts/',
         'https://mangarockteam.com/manga/onepunch-man/',
@@ -39,14 +40,31 @@ export default class Deploy {
         this.webhook = new WebHook()
     }
 
-    run() {
+
+    async run() {
+        const firebaseData: Array<Manga> = await this.firebase.getData();
+        const scrabber = new Scrabber()
+
         this.webSites.forEach(async url => {
-            const scrabber = new Scrabber()
+            // Je vérifie si il existe déja en BDD
+            const mangaFound = firebaseData.find((manga) => { return manga.url === url })
+            try {
+                if (mangaFound) {
+                    // console.log("FETCH ONLY NEW RELEASE")
+                    this.promises.push(scrabber.fetchManga(url, OptionScrabber.onlyNewRelease))
 
-            const remoteMangas = scrabber.init(url)
+                } else {
+                    // console.log("FETCH ALL")
+                    this.promises.push(scrabber.fetchManga(url, OptionScrabber.all))
+                }
 
-            this.promises.push(remoteMangas)
+            } catch (e) {
+                console.error(e)
+            };
         });
+
+
+
 
         Promise.all(this.promises).then((mangas) => {
             this.firebase.getData().then((data: Array<Manga>) => {
@@ -55,7 +73,7 @@ export default class Deploy {
                     if (mangaID > -1) {
                         scrabberManga.release.forEach(remoteChapter => {
                             if(data[mangaID].release) {
-                                let chapterFind = data[mangaID].release.find(localChapter => localChapter.chapter === remoteChapter.chapter);
+                                let chapterFind = data[mangaID].release.find(localChapter => localChapter?.chapter === remoteChapter?.chapter);
                                 if (!chapterFind) {
                                     // Nouveau chapitre disponible
                                     data[mangaID].release.push(remoteChapter)
@@ -69,7 +87,7 @@ export default class Deploy {
                                 console.log("Nouveau chapitre ! - ", scrabberManga.title)
                                 this.webhook.send('Nouveau chapitre disponible d\'un nouveau manga ! ', scrabberManga.title + ' - ' + remoteChapter.chapter, remoteChapter.url)
                             }
-                            
+
                         });
                     } else {
                         // Nouveau manga ajouté dans la liste

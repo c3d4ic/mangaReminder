@@ -13,7 +13,7 @@ export default class WebHook {
 
     send(action: String, title: String, link: String) {
 
-        if(link.length > 0) {
+        if(link?.length > 0) {
             this.embed = new EmbedBuilder()
             .setColor(0x0099FF)
             .setTitle(action)
