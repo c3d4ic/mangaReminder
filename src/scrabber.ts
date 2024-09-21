@@ -8,7 +8,7 @@ const axios = require('axios');
 
 export default class Scrabber {
 
-    
+
     constructor() {
     }
 
@@ -20,36 +20,39 @@ export default class Scrabber {
     async fetchManga(url: String, option: OptionScrabber): Promise<Manga> {
 
         // try {
-            const response = await axios.get(url);
-            const $ = cheerio.load(response.data);
+        const response = await axios.get(url);
+        const $ = cheerio.load(response.data);
 
-            const title = $(".post-title").text();
-            const chapters = $(".wp-manga-chapter");
-            const image = $(".summary_image");
-            var imgURL = $(image).find("img").attr('data-src');
+        const title = $(".big-fat-titles").text().trim();
 
-            var releases: Array<Release> = []
-            releases = await this.getReleases($, chapters, option);
-            let pages
-            for (let i = 0; i <= releases.length - 1; i++) {
-                console.log("Fetch release : ", releases[i].chapter);
-                pages = await this.fetchScanPages(releases[i].url)
-                releases[i].pages = pages
+        const image = $("#manga-page");
+        var imgURL = $(image).find("img").attr('src');
 
-            }
-            let manga: Manga = {
-                title: title,
-                image: imgURL,
-                release: releases,
-                url: url
-            }
-            return manga
+        var releases: Array<Release> = []
 
-        // }
-        // catch (error) {
-        //     // console.error(error);
-        //     // return error
-        // }
+        $('#chapters-list li').each((index: number, element: any) => {
+
+            const chapterTitle = $(element).find('a.chplinks').contents().filter((i: any, node: any) => node.type === 'text')
+            .text().trim();
+           
+            const date = $(element).find('span').text().trim();
+            const url = "https://demonicscans.org" + $(element).find('a').attr('href') || '';
+            releases.push({ 
+                chapter: chapterTitle,
+                url: url,
+                read: false,
+                date: date,
+                pages: []
+            });
+        });
+
+        let manga: Manga = {
+            title: title,
+            image: imgURL,
+            release: releases.reverse(),
+            url: url
+        }
+        return manga
     }
 
     async fetchScanPages(url: String): Promise<String[]> {
@@ -64,7 +67,7 @@ export default class Scrabber {
                 pages.push(imgURL.trim());
 
             });
- 
+
             return pages;
         }
         catch (error) {
@@ -74,37 +77,4 @@ export default class Scrabber {
     }
 
 
-
-    async getReleases($: any, chapters: any, option: OptionScrabber): Promise<Array<Release>> {
-
-        var releases: Array<Release> = []
-        await chapters.each(async (i: number, chapter: any) => {
-
-            var link = $(chapter).find("a")
-            var url = $(link).attr('href')
-            var span = $(chapter).find("span")
-            var a = $(span).find("a");
-            var chapterTitle = $(link).text()
-            if (typeof $(a).attr() !== 'undefined') {
-                // var url = $(a).attr('href');
-
-                releases.push({
-                    chapter: chapterTitle.trim(),
-                    url: url,
-                    read: false,
-                    date: new Date(),
-                    pages: []
-                });
-            } else if(option === OptionScrabber.all){
-                releases.push({
-                    chapter: chapterTitle.trim(),
-                    url: url,
-                    read: (typeof $(a).attr() !== 'undefined') ? false : true,
-                    date: new Date(),
-                    pages: []
-                });
-            }
-        })
-        return releases.reverse();
-    }
 }

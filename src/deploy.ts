@@ -9,27 +9,68 @@ require('dotenv').config();
 export default class Deploy {
 
     readonly webSites: Array<String> = [
-        'https://mangarockteam.com/manga/after-being-reborn-i-became-the-strongest-to-save-everyone/',
-        'https://mangarockteam.com/manga/global-martial-arts/',
-        'https://mangarockteam.com/manga/onepunch-man/',
-        'https://mangarockteam.com/manga/mushoku-tensei-isekai-ittara-honki-dasu/',
-        'https://mangarockteam.com/manga/tate-no-yuusha-no-nariagari/',
-        'https://mangarockteam.com/manga/hajime-no-ippo/',
-        'https://mangarockteam.com/manga/tensei-shitara-slime-datta-ken_2/',
-        'https://mangarockteam.com/manga/solo-max-level-newbie/',
-        'https://mangarockteam.com/manga/the-world-after-the-fall/',
-        'https://mangarockteam.com/manga/the-tutorial-is-too-hard/',
-        'https://mangarockteam.com/manga/the-player-that-cant-level-up/',
-        'https://mangarockteam.com/manga/the-breaker-eternal-force/',
-        'https://mangarockteam.com/manga/return-of-the-sss-class-ranker/',
-        'https://mangarockteam.com/manga/return-of-the-frozen-player/',
-        'https://mangarockteam.com/manga/my-status-as-an-assassin-obviously-exceeds-the-braves/',
-        'https://mangarockteam.com/manga/blue-lock/',
-        'https://mangarockteam.com/manga/solo_leveling_6/',
-        'https://mangarockteam.com/manga/kill-the-hero_2/',
-        'https://mangarockteam.com/manga/one-piece/',
-        'https://mangarockteam.com/manga/return-of-the-disaster-class-hero/',
-        'https://mangarockteam.com/manga/skeleton-soldier-couldnt-protect-the-dungeon/'
+        // 'https://mangarockteam.com/manga/after-being-reborn-i-became-the-strongest-to-save-everyone/',
+        // 'https://mangarockteam.com/manga/global-martial-arts/',
+        // 'https://mangarockteam.com/manga/onepunch-man/',
+        // 'https://mangarockteam.com/manga/mushoku-tensei-isekai-ittara-honki-dasu/',
+        // 'https://mangarockteam.com/manga/tate-no-yuusha-no-nariagari/',
+        // 'https://mangarockteam.com/manga/hajime-no-ippo/',
+        // 'https://mangarockteam.com/manga/tensei-shitara-slime-datta-ken_2/',
+        // 'https://mangarockteam.com/manga/solo-max-level-newbie/',
+        // 'https://mangarockteam.com/manga/the-world-after-the-fall/',
+        // 'https://mangarockteam.com/manga/the-tutorial-is-too-hard/',
+        // 'https://mangarockteam.com/manga/the-player-that-cant-level-up/',
+        // 'https://mangarockteam.com/manga/the-breaker-eternal-force/',
+        // 'https://mangarockteam.com/manga/return-of-the-sss-class-ranker/',
+        // 'https://mangarockteam.com/manga/return-of-the-frozen-player/',
+        // 'https://mangarockteam.com/manga/my-status-as-an-assassin-obviously-exceeds-the-braves/',
+        // 'https://mangarockteam.com/manga/blue-lock/',
+        // 'https://mangarockteam.com/manga/solo_leveling_6/',
+        // 'https://mangarockteam.com/manga/kill-the-hero_2/',
+        // 'https://mangarockteam.com/manga/one-piece/',
+        // 'https://mangarockteam.com/manga/return-of-the-disaster-class-hero/',
+        // 'https://mangarockteam.com/manga/skeleton-soldier-couldnt-protect-the-dungeon/'
+
+        "https://demonicscans.org/manga/Omniscient-Reader%2527s-Viewpoint",
+        "https://demonicscans.org/manga/-The-Player-That-Can%2527t-Level-Up",
+        "https://demonicscans.org/manga/Blue-Lock",
+        "https://demonicscans.org/manga/Hajime-no-Ippo",
+        "https://demonicscans.org/manga/The-Tutorial-is-Too-Hard",
+        "https://demonicscans.org/manga/Global-Martial-Arts",
+        "https://demonicscans.org/manga/The-Regressed-Son-of-a-Duke-is-an-Assassin",
+        "https://demonicscans.org/manga/The-Hero-Returns",
+        "https://demonicscans.org/manga/I-Became-The-King-by-Scavenging",
+        "https://demonicscans.org/manga/Return-of-the-SSS%25252DClass-Ranker",
+        "https://demonicscans.org/manga/Solo-Max%25252DLevel-Newbie",
+        "https://demonicscans.org/manga/The-World-After-the-Fall",
+        "https://demonicscans.org/manga/After-Being-Reborn%252C-I-Became-the-Strongest-to-Save-Everyone",
+        "https://demonicscans.org/manga/Mushoku-Tensei-%257EIsekai-Ittara-Honki-Dasu%257E",
+        "https://demonicscans.org/manga/Tensei-Shitara-Slime-Datta-Ken",
+        "https://demonicscans.org/manga/Eternal-Force--%2528The-Breaker-3%2529",
+        "https://demonicscans.org/manga/Return-of-the-Frozen-Player",
+        "https://demonicscans.org/manga/Assassin-de-Aru-Ore-no-Sutetasu-ga-Yuusha-Yori-mo-Akiraka-ni-Tsuyoi-Nodaga",
+        "https://demonicscans.org/manga/One-Piece",
+        "https://demonicscans.org/manga/The-Return-of-the-Disaster%25252DClass-Hero",
+        "https://demonicscans.org/manga/Skeleton-Soldier",
+        "https://demonicscans.org/manga/Boku-no-Hero-Academia",
+        "https://demonicscans.org/manga/Jujutsu-Kaisen",
+        "https://demonicscans.org/manga/Survival-Story-of-a-Sword-King-in-a-Fantasy-World",
+        "https://demonicscans.org/manga/One%25252DPunch-Man",
+        "https://demonicscans.org/manga/Reincarnator-%2528Manhwa%2529",
+        "https://demonicscans.org/manga/All-Football-Talents-Are-Mine",
+        "https://demonicscans.org/manga/Reaper-of-the-Drifting-Moon",
+        "https://demonicscans.org/manga/Star%25252DEmbracing-Swordmaster",
+        "https://demonicscans.org/manga/The-Indomitable-Martial-King",
+        "https://demonicscans.org/manga/Tomb-Raider-King",
+        "https://demonicscans.org/manga/Son%2527s-Retribution",
+        "https://demonicscans.org/manga/Solo-Leveling%253A-Ragnarok",
+        "https://demonicscans.org/manga/The-Beginning-After-the-End",
+        "https://demonicscans.org/manga/Return-to-Player",
+        "https://demonicscans.org/manga/Absolute-Regression",
+        "https://demonicscans.org/manga/Absolute-Regression",
+        "https://demonicscans.org/manga/Eternally-Regressing-Knight",
+        "https://demonicscans.org/manga/Talent%25252DSwallowing-Magician",
+        "https://demonicscans.org/manga/Reincarnation-Of-The-Heavenly-Demon"
     ]
     public firebase: any
     public webhook: any
@@ -42,10 +83,12 @@ export default class Deploy {
 
 
     async run() {
+
         const firebaseData: Array<Manga> = await this.firebase.getData();
         const scrabber = new Scrabber()
 
         this.webSites.forEach(async url => {
+            // console.log("url : ", url);
             // Je vérifie si il existe déja en BDD
             const mangaFound = firebaseData.find((manga) => { return manga.url === url })
             try {
@@ -54,7 +97,6 @@ export default class Deploy {
                     this.promises.push(scrabber.fetchManga(url, OptionScrabber.onlyNewRelease))
 
                 } else {
-                    // console.log("FETCH ALL")
                     this.promises.push(scrabber.fetchManga(url, OptionScrabber.all))
                 }
 
@@ -68,11 +110,12 @@ export default class Deploy {
 
         Promise.all(this.promises).then((mangas) => {
             this.firebase.getData().then((data: Array<Manga>) => {
+                // console.log("data:  ", data);
                 mangas.forEach((scrabberManga: Manga) => {
                     let mangaID = data.findIndex(remoteManga => remoteManga.title === scrabberManga.title);
                     if (mangaID > -1) {
                         scrabberManga.release.forEach(remoteChapter => {
-                            if(data[mangaID].release) {
+                            if (data[mangaID].release) {
                                 let chapterFind = data[mangaID].release.find(localChapter => localChapter?.chapter === remoteChapter?.chapter);
                                 if (!chapterFind) {
                                     // Nouveau chapitre disponible
@@ -92,7 +135,7 @@ export default class Deploy {
                     } else {
                         // Nouveau manga ajouté dans la liste
                         data.push(scrabberManga)
-                        console.log("Nouveau Manga ! : ", scrabberManga);
+                        // console.log("Nouveau Manga ! : ", scrabberManga);
                         this.webhook.send('Nouveau manga ajouté ! ', scrabberManga.title, '')
                     }
                 })
