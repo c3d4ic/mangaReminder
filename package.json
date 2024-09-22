@@ -35,6 +35,7 @@
     "firebase": "^10.7.1",
     "firebase-admin": "^12.0.0",
     "netlify-lambda": "^2.0.15",
+    "node-cron": "^3.0.3",
     "npx": "^10.2.2"
   }
 }
